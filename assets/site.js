@@ -1,0 +1,1 @@
+window.SITE={"phone": "+8801342117777", "wa": "8801342117777", "facebook": "https://www.facebook.com/BKAgroBD", "instagram": "https://www.instagram.com/bkagrobd/", "menu": [["index.html", "Home"], ["about.html", "Our Farm"], ["index.html#live", "Live Cattle"], ["contact.html", "Contact"]]};
