@@ -230,3 +230,9 @@ body{background:#fdfcf9;color:#243c30}
 .bk-wa-float:hover{transform:translateY(-3px);background:#168f46;box-shadow:0 12px 30px #123c2470}
 .bk-wa-float svg{flex:none}
 @media(max-width:600px){.bk-wa-float{right:14px;bottom:16px;padding:12px 14px}.bk-wa-float span{display:none}.bk-wa-float svg{width:29px;height:29px}}
+
+/* Icon-only circular WhatsApp floating button */
+.bk-wa-float{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;box-sizing:border-box!important;border-radius:50%!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:0!important}
+.bk-wa-float svg{width:30px!important;height:30px!important}
+.bk-wa-float span{display:none!important}
+@media(max-width:600px){.bk-wa-float{width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important}}
