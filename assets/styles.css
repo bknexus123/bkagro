@@ -224,3 +224,9 @@ body{background:#fdfcf9;color:#243c30}
 .hero .slidecopy .btn{border-radius:3px!important}
 .footer{background:#163a2b!important}
 @media(max-width:760px){.filters{flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;padding-bottom:14px!important}.filters button.filter{white-space:nowrap!important;padding:10px 13px!important;font-size:12.5px!important}.product .body{padding:13px!important}.product h3{font-size:16px!important}.price-amount{font-size:27px!important}}
+
+/* Persistent WhatsApp support button; checkout remains email-first. */
+.bk-wa-float{position:fixed;right:22px;bottom:24px;z-index:10000;display:flex;align-items:center;gap:9px;padding:12px 17px;border-radius:100px;background:#25d366;color:#fff!important;text-decoration:none!important;box-shadow:0 8px 28px #123c2460;font-weight:800;font-size:14px;transition:transform .2s,background .2s,box-shadow .2s}
+.bk-wa-float:hover{transform:translateY(-3px);background:#168f46;box-shadow:0 12px 30px #123c2470}
+.bk-wa-float svg{flex:none}
+@media(max-width:600px){.bk-wa-float{right:14px;bottom:16px;padding:12px 14px}.bk-wa-float span{display:none}.bk-wa-float svg{width:29px;height:29px}}
