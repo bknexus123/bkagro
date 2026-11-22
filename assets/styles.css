@@ -160,3 +160,67 @@ html{scroll-behavior:smooth;scroll-padding-top:95px}body{overflow-x:hidden}img{m
 /* Our Journey Begins at the Farm: show complete cow without sky-heavy framing */
 .pagehero + .section .split>img[src$="farm-open.webp"]{height:440px!important;width:100%!important;object-fit:contain!important;object-position:center!important;background:#e7ede3!important;padding:0!important;border-radius:7px!important}
 @media(max-width:760px){.gallery img{height:170px!important}.pagehero + .section .split>img[src$="farm-open.webp"]{height:310px!important}}
+
+.bn-name{font-family:Kalpurush,"Noto Sans Bengali",sans-serif;font-size:16px;color:#52683a;margin:4px 0 8px}
+.product-note{background:#f0f5e9;border-left:3px solid #7d9856;padding:8px 10px;font-size:13px!important}
+.pack-note{font-size:13px!important;color:#536d43;font-weight:700}
+.estimate{margin-top:20px;padding:17px 18px;background:#f0f5e9;border:1px solid #dbe8cb;border-radius:8px}
+.estimate strong{font-size:21px;color:#1c462a}.estimate p{font-size:13px;line-height:1.6;margin:8px 0 0}
+.line-price{font-size:14px;font-weight:700;color:#365e2e;margin-top:6px}
+.animal-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.animal-gallery figure{margin:0;background:#f5f7f0;border-radius:8px;overflow:hidden}
+.animal-gallery img{width:100%;height:300px;object-fit:cover;display:block}
+.animal-gallery figcaption{padding:14px 18px;display:grid;gap:5px}
+.animal-gallery figcaption span,.photo-note{font-size:14px;color:#667363}
+.feed-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.feed-grid article{background:white;padding:24px;border-radius:8px;border:1px solid #e5e8df}
+.feed-grid h3{font-size:20px;line-height:1.4}.feed-grid p,.trust-copy p{font-size:16px;line-height:1.8}
+.trust-copy{max-width:860px;margin:auto}
+@media(max-width:700px){.animal-gallery,.feed-grid{grid-template-columns:1fr}.animal-gallery img{height:240px}}
+
+.natural-badge{display:inline-flex;align-items:center;gap:6px;margin:8px 0 4px;padding:6px 10px;background:#eaf2df;border:1px solid #d5e4c5;color:#365e2b;font-weight:750;font-size:11px;line-height:1.4;border-radius:5px;letter-spacing:.1px}
+.natural-badge::before{content:"✓";font-weight:900;color:#4b7a31}
+.product .photo img{object-fit:contain!important}
+
+/* Nov 2026 refinements */
+.halal-badge{display:inline-flex;align-items:center;gap:6px;background:#e8f2df;color:#285c30;border:1px solid #c9dfbf;border-radius:5px;padding:6px 10px;font-weight:800;font-size:12px;line-height:1.3;margin:5px 0 6px}
+.product .price{display:flex!important;align-items:baseline;gap:3px;flex-wrap:wrap;color:#173f2c!important;margin:12px 0 8px!important;line-height:1.2!important}
+.price-amount{font-size:clamp(26px,2.2vw,32px)!important;font-weight:900!important;letter-spacing:-.6px;color:#164b2b!important;font-variant-numeric:tabular-nums}
+.price-unit{font-size:15px!important;font-weight:700;color:#536653}
+.filters .filter{background:#fff!important;color:#34503b!important;border:1px solid #d8e4d3!important;transition:background .18s,border-color .18s,color .18s,transform .18s!important}
+.filters .filter:hover,.filters .filter:focus-visible{background:#e8f5e1!important;color:#245b32!important;border-color:#a9cf9b!important;transform:translateY(-1px)}
+.filters .filter.active{background:#e4f2dc!important;border-color:#8db87c!important;color:#20552f!important}
+.email-status{padding:12px 15px;background:#f0f5e9;border-left:3px solid #749e59;line-height:1.65;font-size:14px}
+#emailOrderLink{display:inline-flex;margin:8px 12px 8px 0}
+@media(max-width:720px){.price-amount{font-size:27px!important}.halal-badge{font-size:11px}.filters .filter{min-height:43px!important}}
+
+/* Consistent category tabs */
+.filters .filter,.filters .filter.active{background:#fff!important;color:#2c5139!important;border:1px solid #d5e1d1!important;box-shadow:none!important;border-radius:7px!important;font-weight:700!important}
+.filters .filter:hover,.filters .filter:focus-visible{background:#dff1d5!important;color:#194c2c!important;border-color:#8dbb7c!important;box-shadow:0 3px 10px rgba(40,90,40,.12)!important}
+.filters .filter.active{border-bottom:3px solid #65964f!important}
+.email-status{padding:15px;margin-top:14px;border:1px solid #e2c8a6;background:#fff7e9;color:#633e15;border-radius:8px;font-size:15px}
+.email-status.email-success{border-color:#a7cda0;background:#eaf5e8;color:#1c5a2e}
+
+/* BK Agro elevated storefront – refined typography, visual hierarchy and filter parity */
+:root{--bk-forest:#153e2b;--bk-gold:#a7864c;--bk-cream:#faf8f2}
+body{background:#fdfcf9;color:#243c30}
+.sectionhead h2,.split h2,.farm-story-copy h2{letter-spacing:-.025em!important;color:#173d2b!important}
+.sectionhead .eyebrow{letter-spacing:.16em!important;background:transparent!important;color:#967344!important;font-weight:800!important}
+.filters{display:flex!important;flex-wrap:wrap!important;gap:10px!important;align-items:center!important;padding:9px 0 22px!important}
+.filters button.filter,.filters button.filter.active{appearance:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:43px!important;padding:10px 20px!important;background:#fff!important;color:#284e37!important;border:1px solid #d8e2d8!important;border-radius:4px!important;font-size:14px!important;font-weight:700!important;line-height:1.2!important;box-shadow:none!important;letter-spacing:.01em!important;transition:background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease!important}
+.filters button.filter:hover,.filters button.filter:focus-visible{background:#e4f2df!important;color:#164b2a!important;border-color:#8eb987!important;box-shadow:0 3px 12px rgba(28,83,45,.1)!important}
+.filters button.filter.active{border-color:#91b38c!important;box-shadow:inset 0 -2px 0 #78a56c!important}
+.product{background:#fff!important;border:1px solid #e8e8df!important;border-radius:5px!important;box-shadow:0 6px 28px rgba(20,50,29,.035)!important;transition:transform .22s ease,box-shadow .22s ease!important}
+.product:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(20,50,29,.095)!important}
+.product .photo{background:#fbfaf6!important;border-bottom:1px solid #eeeee6!important}
+.product .body{padding:21px!important}
+.product h3{color:#163d2a!important;font-size:21px!important;line-height:1.35!important}
+.product .price{padding:11px 0 4px!important;border-top:1px solid #e8e9df;margin-top:16px!important}
+.price-amount{font-size:clamp(28px,2.6vw,36px)!important;color:#173d2b!important;letter-spacing:-.04em!important}
+.halal-badge{background:#f3f1e8!important;color:#4e6036!important;border:1px solid #e0dcc9!important}
+.product .btn{background:#204c34!important;border-color:#204c34!important;border-radius:3px!important}
+.product .btn:hover{background:#376a42!important}
+.hero .slidecopy h1{letter-spacing:-.035em!important;text-shadow:0 2px 18px rgba(0,0,0,.12)}
+.hero .slidecopy .btn{border-radius:3px!important}
+.footer{background:#163a2b!important}
+@media(max-width:760px){.filters{flex-wrap:nowrap!important;overflow-x:auto!important;gap:8px!important;padding-bottom:14px!important}.filters button.filter{white-space:nowrap!important;padding:10px 13px!important;font-size:12.5px!important}.product .body{padding:13px!important}.product h3{font-size:16px!important}.price-amount{font-size:27px!important}}

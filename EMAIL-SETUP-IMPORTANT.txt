@@ -1,0 +1,8 @@
+BK Agro checkout email setup
+
+Orders are submitted to https://formsubmit.co/ajax/info@bkagrobd.com from the browser.
+IMPORTANT: Before launch, the owner of info@bkagrobd.com must complete the FormSubmit activation/verification email and test a real order on the deployed HTTPS domain. FormSubmit is a third-party service.
+The website cannot guarantee mail delivery until verified and tested. On failure it shows a manual email link and WhatsApp option.
+This website does not process payments; it submits order requests.
+For production reliability, replace the third-party form service with a secure backend or transactional email API with spam protection, consent, monitoring, and server-side validation.
+The Terms and Return Policy are drafts requiring legal/business review.

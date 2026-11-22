@@ -13,3 +13,7 @@ Lamb is Coming Soon per latest instruction. Layer eggs currently use the supplie
 Before deployment, review terms/privacy text, test WhatsApp submission manually, and confirm the live domain. The original source archives remain unchanged.
 
 FONT NOTE: Nexa Pro Trial VF and Kalpurush font binaries are not included. Exact Nexa rendering requires licensed font files.
+
+
+## Direct order emails (important activation step)
+The checkout sends order details directly from the form to `info@bkagrobd.com` via FormSubmit AJAX, with a structured table email. It does not open WhatsApp or the visitor's email client. The owner MUST verify/activate `info@bkagrobd.com` with FormSubmit's initial confirmation email. Until activation, delivery is not assured. For production, use a verified transactional email service and a server-side endpoint for reliable delivery, abuse protection and order records. Test a real checkout on a deployed HTTPS website.
