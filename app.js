@@ -1,0 +1,80 @@
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];const P=window.PRODUCTS,S=window.SITE;let cart=JSON.parse(localStorage.getItem('bk_cart')||'{}');cart=Object.fromEntries(Object.entries(cart).filter(([id])=>P.some(p=>p.id===id)));const save=()=>{localStorage.setItem('bk_cart',JSON.stringify(cart));updateCount()};const count=()=>Object.values(cart).reduce((a,b)=>a+b,0);function updateCount(){$$('.count').forEach(x=>x.textContent=count())}function toast(t){let el=$('#toast');if(!el)return;el.textContent=t;el.classList.remove('toast-show');void el.offsetWidth;el.classList.add('toast-show');clearTimeout(window.bkToastTimer);window.bkToastTimer=setTimeout(()=>el.classList.remove('toast-show'),1400)}function add(id,n=1){cart[id]=(cart[id]||0)+n;save();let b=typeof event!=="undefined"&&event?event.target:null;if(b&&b.tagName==='BUTTON'){let old=b.textContent;b.textContent='✓ Added';b.classList.add('added-flash');setTimeout(()=>{b.textContent=old;b.classList.remove('added-flash')},1000)}}function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save();renderCart();renderSummary()}function unit(p,n){return p.eggs?`${n} box(es) (${n*30} eggs)`:`${n} ${p.unit}`} function bn(n){return String(n)}function renderProducts(filter='all'){let el=$('#productgrid');if(!el)return;let arr=P.filter(p=>filter==='all'||p.category===filter||p.sub===filter);el.innerHTML=arr.map(p=>`<article class="product"><div class="photo"><img loading="lazy" src="images/${p.image}" alt="${p.name}"></div><div class="body"><div class="tag">${p.category}${p.coming?' · Coming Soon':''}</div><h3>${p.name}</h3><p>${p.description}</p>${p.coming?'<div class="message">Coming Soon</div>':`<div class="price">${p.price?`৳${p.price.toLocaleString('en-BD')} / ${p.unit}`:''}${p.eggs?' · 30 eggs per box':''}</div><div class="quantity"><button aria-label="Decrease quantity" onclick="qty('${p.id}',-1)">−</button><span id="q-${p.id}">1</span><button aria-label="Increase quantity" onclick="qty('${p.id}',1)">+</button></div><button class="btn" onclick="add('${p.id}',Number($('#q-${p.id}').dataset.qty||1))">Add to Cart</button>`}</div></article>`).join('')}function qty(id,d){let e=$('#q-'+id);let n=Math.max(1,Number(e.dataset.qty||1)+d);e.dataset.qty=n;e.textContent=bn(n)}function renderCart(){let el=$('#cartlist');if(!el)return;let ids=Object.keys(cart);el.innerHTML=ids.length?ids.map(id=>{let p=P.find(x=>x.id===id);if(!p)return '';return `<div class="cartitem"><div class="cartrow"><img src="images/${p.image}" alt=""><div><b>${p.name}</b><div class="small">${unit(p,cart[id])}</div></div></div><div class="quantity"><button onclick="change('${id}',-1)">−</button><span>${bn(cart[id])}</span><button onclick="change('${id}',1)">+</button></div></div>`}).join(''):'<div class="empty">Your cart is empty.</div>';let btn=$('#goCheckout');if(btn)btn.style.display=ids.length?'inline-flex':'none'}function renderSummary(){let el=$('#summary');if(!el)return;let ids=Object.keys(cart);el.innerHTML=ids.length?ids.map(id=>{let p=P.find(x=>x.id===id);if(!p)return '';return `<p><b>${p.name}</b><br><span class="small">${unit(p,cart[id])}</span></p>`}).join(''):'Your cart is empty';let beef=$('#beefNote');if(beef)beef.style.display=cart.beef?'block':'none'}function layout(){let header=`<header class="header"><div class="wrap nav"><a class="brand" href="index.html"><img src="bk-agro-logo.png" alt="BK Agro"></a><nav class="menu">${S.menu.map(x=>`<a href="${x[0]}">${x[1]}</a>`).join('')}</nav><div class="actions"><a class="iconlink" aria-label="Call" href="tel:${S.phone}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5.08 3h3a2 2 0 0 1 2 1.72l.55 2.81a2 2 0 0 1-.57 1.85L8.1 11.3a16 16 0 0 0 4.6 4.6l1.92-1.96a2 2 0 0 1 1.85-.57l2.81.55A2 2 0 0 1 22 16.92Z"/></svg></a><a class="cartlink" href="cart.html" aria-label="Cart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.5 13h12l3-9H6"/></svg> <span class="count">0</span></a><button class="hamb" aria-label="Menu" onclick="$('.mobilemenu').classList.toggle('show')">☰</button></div></div><nav class="mobilemenu wrap">${S.menu.map(x=>`<a href="${x[0]}">${x[1]}</a>`).join('')}</nav></header>`;let footer=`<footer class="footer"><div class="wrap"><div class="footgrid"><div><h3>BK Agro</h3><p>Fresh from our farm in Meherpur</p><p>Carefully raised livestock, fresh eggs and farm products.</p><div class="social"><a href="tel:${S.phone}" aria-label="Phone"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5.08 3h3a2 2 0 0 1 2 1.72l.55 2.81a2 2 0 0 1-.57 1.85L8.1 11.3a16 16 0 0 0 4.6 4.6l1.92-1.96a2 2 0 0 1 1.85-.57l2.81.55A2 2 0 0 1 22 16.92Z"/></svg></a><a href="${S.facebook}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12"/></svg></a><a href="${S.instagram}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="1" fill="currentColor"/></svg></a></div></div><div><h3>Explore</h3><a href="index.html#shop">All Items</a><br><a href="about.html">Our Farm</a><br><a href="contact.html">Contact</a></div><div><h3>Support</h3><a href="terms.html">Terms & Conditions</a><br><a href="return-policy.html">Return & Refund Policy</a><br><a href="privacy-policy.html">Privacy Policy</a><br><a href="mailto:info@bkagrobd.com">info@bkagrobd.com</a><p style="margin-top:12px">+880 1342-117777</p><a href="https://share.google/g9g9R55w9zO2mrFkF" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M3 10.5 12 3l9 7.5V21h-7v-7h-4v7H3z"/></svg> Jhaubaria, Meherpur Sadar, Meherpur, Khulna-7100 · Google Maps</a></div></div><div class="bottom">© 2026 BK Agro · All rights reserved</div></div></footer><div id="toast" class="toast"></div><a class="bk-wa-float" href="https://wa.me/${S.wa}" target="_blank" rel="noopener noreferrer" aria-label="Chat with BK Agro on WhatsApp" title="Chat on WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true" width="27" height="27" fill="currentColor"><path d="M16 .8A15.1 15.1 0 0 0 3.1 23.7L1 31l7.5-2a15.2 15.2 0 1 0 7.5-28.2Zm0 27.5c-2.4 0-4.8-.7-6.8-2l-.5-.3-4.4 1.2 1.2-4.3-.3-.5a12.4 12.4 0 1 1 10.8 5.9Zm6.8-9.3c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3 0-.5-.1-.7-.1-.2-.9-2.2-1.2-3-.3-.7-.6-.6-.9-.6h-.8c-.3 0-.7.1-1 .5-.3.4-1.3 1.3-1.3 3.2s1.4 3.7 1.6 3.9c.2.3 2.7 4.1 6.6 5.7.9.4 1.6.6 2.2.7.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5Z"/></svg></a>`;$('#header').innerHTML=header;$('#footer').innerHTML=footer;updateCount();initCookieConsent();if(location.pathname.endsWith('index.html')||location.pathname==='/'||location.pathname.endsWith('/')){let nav=$('.menu');if(nav){let shop=document.createElement('a');shop.href='#shop';shop.textContent='All Items';nav.insertBefore(shop,nav.children[1]);}}}function slides(){let slides=$$('.slide'),dots=$('#dots');if(!slides.length)return;let i=0;dots.innerHTML=slides.map((_,j)=>`<button aria-label="স্লাইড ${j+1}" onclick="setSlide(${j})"></button>`).join('');window.setSlide=j=>{i=j;slides.forEach((s,k)=>s.classList.toggle('active',k===i));$$('button',dots).forEach((s,k)=>s.classList.toggle('active',k===i))};setSlide(0);let timer=setInterval(()=>setSlide((i+1)%slides.length),5000);let h=$('.hero');h.addEventListener('mouseenter',()=>clearInterval(timer));h.addEventListener('mouseleave',()=>timer=setInterval(()=>setSlide((i+1)%slides.length),5000))}const WEIGHT_NOTE="Meat is billed on actual weight, so the final amount may change slightly. We'll confirm the exact total by phone or email.";
+function unit(p,n){return p.eggs?`${n} ${n===1?'box':'boxes'} (${n*p.eggs} eggs)`:`${n} kg`}
+function money(n){return '৳ ' + Number(n).toLocaleString('en-BD')}
+function estimatedTotal(){return Object.entries(cart).reduce((sum,[id,n])=>{let p=P.find(x=>x.id===id);return sum+(p?.price||0)*n},0)}
+function priceRows(){return `<div class="estimate"><strong>Estimated total: ${money(estimatedTotal())}</strong><p>${WEIGHT_NOTE}</p></div>`}
+function renderProducts(filter='all'){
+ let el=$('#productgrid');if(!el)return;
+ let arr=P.filter(p=>filter==='all'||p.category===filter);
+ el.innerHTML=arr.map(p=>`<article class="product"><div class="photo"><img loading="lazy" src="images/${p.image}" alt="${p.name}"></div><div class="body"><div class="tag">${p.category}</div><div class="halal-badge">✓ 100% Halal</div>${p.badge?`<div class="natural-badge">${p.badge}</div>`:""}<h3>${p.name}</h3><div class="bn-name" lang="bn">${p.bangla}</div><p>${p.description}</p>${p.note?`<p class="product-note">${p.note}</p>`:''}<div class="price"><span class="price-amount">${money(p.price)}</span><span class="price-unit"> / ${p.unit}</span></div>${p.eggs?`<p class="pack-note">${p.eggs} eggs per box</p>`:''}<div class="quantity"><button aria-label="Decrease quantity" onclick="qty('${p.id}',-1)">−</button><span id="q-${p.id}">1</span><button aria-label="Increase quantity" onclick="qty('${p.id}',1)">+</button></div><button class="btn" onclick="add('${p.id}',Number($('#q-${p.id}').dataset.qty||1))">${p.eggs?`Add 1 Box (${p.eggs} eggs)`:'Add to Cart'}</button></div></article>`).join('');
+}
+function renderCart(){
+ let el=$('#cartlist');if(!el)return;
+ let ids=Object.keys(cart).filter(id=>P.some(p=>p.id===id));
+ el.innerHTML=ids.length?ids.map(id=>{let p=P.find(x=>x.id===id),n=cart[id];return `<div class="cartitem"><div class="cartrow"><img src="images/${p.image}" alt=""><div><b>${p.name}</b><div class="small">${unit(p,n)}</div><div class="line-price">${money(p.price)} / ${p.unit} · ${money(p.price*n)}</div></div></div><div class="quantity"><button onclick="change('${id}',-1)">−</button><span>${n}</span><button onclick="change('${id}',1)">+</button></div></div>`}).join('')+priceRows():'<div class="empty">Your cart is empty.</div>';
+ let btn=$('#goCheckout');if(btn)btn.style.display=ids.length?'inline-flex':'none';
+}
+function renderSummary(){
+ let el=$('#summary');if(!el)return;
+ let ids=Object.keys(cart).filter(id=>P.some(p=>p.id===id));
+ el.innerHTML=ids.length?ids.map(id=>{let p=P.find(x=>x.id===id),n=cart[id];return `<p><b>${p.name}</b><br><span class="small">${unit(p,n)} · ${money(p.price)} / ${p.unit} · ${money(p.price*n)}</span></p>`}).join('')+priceRows():'Your cart is empty';
+ let beef=$('#beefNote');if(beef)beef.style.display=cart.beef?'block':'none';
+}
+function checkout(){
+ const form=$('#checkoutForm');if(!form)return;
+ let stored={};try{stored=JSON.parse(localStorage.getItem('bk_customer')||'{}')}catch(e){}
+ Object.keys(stored).forEach(k=>{if(form.elements[k]&&k!=='agree')form.elements[k].value=stored[k]});
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!Object.keys(cart).length){toast('Please add products to your cart');return}
+  if(!form.reportValidity())return;
+  const d=Object.fromEntries(new FormData(form).entries());
+  if(!/^01\d{9}$/.test(d.mobile)){alert('Enter a valid 11-digit mobile number');return}
+  const items=Object.entries(cart).filter(([id])=>P.some(p=>p.id===id)).map(([id,quantity])=>({id,quantity}));
+  const total=money(estimatedTotal());
+  const status=$('#emailStatus'),submit=form.querySelector('button[type="submit"]');
+  status.hidden=false;status.textContent='Sending your order securely…';submit.disabled=true;
+  try{
+   /* Order details go straight to BK Agro's email through FormSubmit (no API key needed). */
+   const now=new Date(),pad=n=>String(n).padStart(2,'0');
+   const orderId='BKA-'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'-'+pad(now.getHours())+pad(now.getMinutes())+Math.floor(10+Math.random()*90);
+   const lines=items.map((it,i)=>{const p=P.find(x=>x.id===it.id);return (i+1)+'. '+p.name+' — '+unit(p,it.quantity)+' — '+money(p.price*it.quantity)}).join('\n');
+   const payload={
+    _subject:'New BK Agro Order '+orderId,
+    _template:'table',
+    _captcha:'false',
+    _replyto:d.email||'',
+    'Order ID':orderId,
+    'Order date':now.toLocaleString('en-GB'),
+    'Customer name':d.name,
+    'Mobile number':d.mobile,
+    'Customer email':d.email||'Not provided',
+    'House / Flat / Road':d.address,
+    'Area':d.area,
+    'City / District':d.city,
+    'Landmark':d.landmark||'—',
+    'Ordered items':lines,
+    'Estimated total':total,
+    'Weight note':'Meat is billed on actual weight. Final amount may change slightly.',
+    'Customer notes':d.special||'None',
+    'Terms accepted':'Yes'
+   };
+   const response=await fetch('https://formsubmit.co/ajax/info@bkagrobd.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload),cache:'no-store'});
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok||String(result.success)!=='true')throw new Error(result.message||'Email delivery unavailable');
+   const data={orderId};
+   status.textContent='Order submitted successfully. Reference: '+data.orderId+'. BK Agro has been notified by email. We will contact you using your phone number to confirm.';
+   status.classList.add('email-success');
+   const saved={...d};delete saved.agree;localStorage.setItem('bk_customer',JSON.stringify(saved));
+   localStorage.setItem('bk_last_order',JSON.stringify({orderId:data.orderId,items,total}));
+   cart={};save();renderSummary();
+   form.reset();
+  }catch(err){
+   status.textContent=(location.protocol==='file:'?'This is an offline preview. Submit orders on the deployed Cloudflare Pages website. ':'Your order was not submitted. ')+(err.message||'')+' Your cart has been kept. Please try again, or order on WhatsApp: +880 1342-117777.';
+   status.classList.remove('email-success');console.error('BK Agro order delivery:',err);
+  }finally{submit.disabled=false}
+ });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{layout();renderProducts();slides();renderCart();renderSummary();checkout();$$('[data-filter]').forEach(b=>b.onclick=()=>{$$('[data-filter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderProducts(b.dataset.filter)})});
+function initCookieConsent(){if(localStorage.getItem('bk_cookie_choice'))return;const panel=document.createElement('aside');panel.id='cookieConsent';panel.className='cookie-consent';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Cookie preferences');panel.innerHTML=`<div><strong>We use cookies</strong><p>We use essential storage for your cart and preferences. You can choose whether to allow optional cookies.</p></div><div class="cookie-buttons"><button type="button" class="cookie-secondary" id="cookieEssential">Essential only</button><button type="button" class="btn" id="cookieAccept">Accept cookies</button></div>`;document.body.appendChild(panel);document.getElementById('cookieEssential').onclick=()=>chooseCookies('essential');document.getElementById('cookieAccept').onclick=()=>chooseCookies('all');function chooseCookies(v){localStorage.setItem('bk_cookie_choice',v);panel.classList.add('cookie-hide');setTimeout(()=>panel.remove(),220)}}
