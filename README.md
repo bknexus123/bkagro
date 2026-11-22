@@ -1,19 +1,32 @@
-# BK Agro website
-Static HTML/CSS/JS site, ready for Cloudflare Pages. No build step. Upload the contents of this folder.
+# BK Agro website (bkagrobd.com)
 
-## Order handling
-Checkout prepares a WhatsApp message to +8801342117777. The customer must tap Send in WhatsApp. The site does NOT automatically submit orders or email backups. For guaranteed server-side records, a verified backend/API integration is required.
+Static website served by a **Cloudflare Worker** (project name `bkagro`), deployed automatically from the GitHub repo `bknexus123/bkagro`.
 
-## Editing
-Products: assets/products.js (all prices null). Navigation and contacts: assets/site.js. Page layout: assets/app.js. Photos: images/.
+## How orders work
+1. The customer fills in the checkout form and taps **Submit Order**.
+2. The form sends the order to `/api/order` (handled by `worker.js`).
+3. The Worker emails the full order (customer, delivery address, items, prices, estimated total, notes) to **bkagro2025@gmail.com** using **Cloudflare Email Routing**. No outside service, no API key, no activation emails.
+4. The customer sees "Order submitted successfully" with an order reference (for example `BKA-20261210-3A7F14`).
 
-## Notes
-Lamb is Coming Soon per latest instruction. Layer eggs currently use the supplied egg photo as a placeholder, and duck meat/eggs use the user's real duck photo, not misleading stock product photos. Replace these with verified real product shots when available. All uploaded images remain genuine photos.
+Product names and prices in the email are read from `assets/products.js`, so the email always matches the website.
 
-Before deployment, review terms/privacy text, test WhatsApp submission manually, and confirm the live domain. The original source archives remain unchanged.
+## One-time requirement
+In Cloudflare → bkagrobd.com → **Email → Email Routing → Destination addresses**, `bkagro2025@gmail.com` must show **Verified**.
 
-FONT NOTE: Nexa Pro Trial VF and Kalpurush font binaries are not included. Exact Nexa rendering requires licensed font files.
+To change where orders go, edit `ORDER_TO` in `wrangler.jsonc`.
 
+## Files
+| What | File |
+|---|---|
+| Products and prices | `assets/products.js` |
+| Contacts and menu | `assets/site.js` |
+| Cart, checkout and page logic | `assets/app.js` |
+| Division / district / area lists | `assets/locations.js`, `assets/locations-ui.js` |
+| Order email (server side) | `worker.js` |
+| Cloudflare settings | `wrangler.jsonc` |
+| Files hidden from visitors | `.assetsignore` |
 
-## Direct order emails (important activation step)
-The checkout sends order details directly from the form to `info@bkagrobd.com` via FormSubmit AJAX, with a structured table email. It does not open WhatsApp or the visitor's email client. The owner MUST verify/activate `info@bkagrobd.com` with FormSubmit's initial confirmation email. Until activation, delivery is not assured. For production, use a verified transactional email service and a server-side endpoint for reliable delivery, abuse protection and order records. Test a real checkout on a deployed HTTPS website.
+## If an order email does not arrive
+- Check Gmail Spam and search "New Order BKA".
+- Cloudflare → Email Routing → Activity log: look for the order time.
+- Cloudflare → Workers & Pages → bkagro → Logs: look for "Order email failed".

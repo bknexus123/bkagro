@@ -9,12 +9,12 @@
     "run_worker_first": ["/api/*"]
   },
   // Orders are emailed through Cloudflare Email Routing.
-  // ORDER_TO must be a VERIFIED destination address in Email Routing (the Gmail that info@bkagrobd.com forwards to).
+  // ORDER_TO must be a VERIFIED destination address in Email Routing.
   "send_email": [
     { "name": "ORDER_EMAIL" }
   ],
   "vars": {
-    "ORDER_TO": "bknexusltd@gmail.com",
+    "ORDER_TO": "bkagro2025@gmail.com",
     "ORDER_FROM": "orders@bkagrobd.com"
   }
 }
