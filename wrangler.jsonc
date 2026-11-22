@@ -1,5 +1,5 @@
 {
-  // BK Agro — Cloudflare Worker (static site + /api/order)
+  // BK Agro — Cloudflare Worker (website + order emails)
   "name": "bkagro",
   "main": "worker.js",
   "compatibility_date": "2025-09-01",
@@ -7,5 +7,14 @@
     "directory": ".",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
+  },
+  // Orders are emailed through Cloudflare Email Routing.
+  // ORDER_TO must be a VERIFIED destination address in Email Routing (the Gmail that info@bkagrobd.com forwards to).
+  "send_email": [
+    { "name": "ORDER_EMAIL" }
+  ],
+  "vars": {
+    "ORDER_TO": "bknexusltd@gmail.com",
+    "ORDER_FROM": "orders@bkagrobd.com"
   }
 }
