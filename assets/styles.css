@@ -285,3 +285,69 @@ body{background:#fdfcf9;color:#243c30}
 .footer .social{margin-top:8px!important}.footer .social a{width:34px!important;height:34px!important}
 .footer .bottom{margin-top:17px!important;padding-top:9px!important;font-size:11px!important}
 @media(max-width:720px){.footgrid{grid-template-columns:1fr 1fr!important;gap:15px 20px!important}.footgrid>div:first-child{grid-column:1/-1}.footer{padding:22px 0 10px!important}.footer h3{font-size:14px!important}.footer p,.footer a{font-size:11px!important}.footer .bottom{margin-top:12px!important}.bk-delivery-inner{animation-duration:85s!important}}
+
+/* ===== Round 1 feedback (Nov 2026) ===== */
+/* Cookie notice: thin one-line ribbon at the very top */
+.cookie-consent{position:relative!important;left:auto!important;bottom:auto!important;top:auto!important;transform:none!important;width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-bottom:1px solid #dfe7d6!important;border-radius:0!important;box-shadow:none!important;background:#f4f7ef!important;padding:6px 16px!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:14px!important;z-index:60!important;animation:none!important}
+.cookie-consent p{margin:0!important;font-size:12.5px!important;line-height:1.4!important;color:#3d4f40!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cookie-consent strong{font-size:12.5px!important}
+.cookie-consent .cookie-buttons{display:flex;gap:8px;flex-shrink:0}
+.cookie-consent .cookie-buttons button{padding:4px 12px!important;font-size:12px!important;border-radius:5px!important;line-height:1.5}
+.cookie-hide{opacity:0;transition:.2s}
+@media(max-width:640px){.cookie-consent{gap:8px!important;padding:6px 10px!important}.cookie-consent p{white-space:normal;font-size:11.5px!important}}
+
+/* Delivery ticker: very top, larger text, fast, 2-3 repeats on a laptop */
+.bk-delivery-ticker{padding:9px 0!important;min-height:40px}
+.bk-delivery-inner{gap:30vw!important;animation:bkDeliveryScroll 16s linear infinite!important}
+.bk-delivery-inner span{font-size:15px!important;font-weight:700;letter-spacing:.2px}
+@media(max-width:640px){.bk-delivery-inner{gap:60vw!important;animation-duration:11s!important}.bk-delivery-inner span{font-size:14px!important}}
+@media(prefers-reduced-motion:reduce){.bk-delivery-inner{animation-duration:40s!important}}
+
+/* Product photos: one white tone so cut-out images look seamless */
+.product .photo,.product .photo img,.detail-main,.detail-thumb img,.related-item img,.cartrow img{background:#fff!important}
+.product .photo{border-bottom:1px solid #eef1ea}
+/* Raj Hash (goose) is 2-3x the size of Pati Hash (duck): show them in proportion */
+.product[data-id="pati-hash"] .photo img{transform:scale(.68)}
+.product[data-id="raj-hash"] .photo img{transform:scale(1.04)}
+.product[data-id="pati-hash"]:hover .photo img{transform:scale(.72)}
+.product[data-id="raj-hash"]:hover .photo img{transform:scale(1.08)}
+.premium-detail[data-id="pati-hash"] .detail-main{transform:scale(.72)}
+
+/* Add to Cart + Buy Now */
+.card-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.product .card-buttons .btn{width:100%!important}
+.product .btn.buy-now,.btn.buy-now{background:#c9a24a!important;border-color:#c9a24a!important;color:#1d2a20!important}
+.product .btn.buy-now:hover,.btn.buy-now:hover{background:#b48f3c!important;border-color:#b48f3c!important}
+.detail-buy .btn.buy-now{margin-left:0}
+
+/* Footer tagline + optional labels */
+.foot-tagline{letter-spacing:.14em;text-transform:uppercase;font-size:12px;font-weight:700;opacity:.85}
+.field label .optional{font-weight:400;opacity:.65;font-size:.9em}
+.cookie-consent .cookie-buttons button{min-height:0!important;height:auto!important;padding:3px 11px!important;box-shadow:none!important}
+@media(max-width:640px){.cookie-consent .cookie-more{display:none}.cookie-consent p{white-space:nowrap!important}}
+
+/* ===== UI refresh (Organic India-style standard shop layout) ===== */
+/* Shorter hero so products appear sooner */
+.hero{height:420px!important}
+.slide{min-height:420px!important}
+@media(max-width:760px){.hero{height:auto!important}.slide{min-height:360px!important}}
+/* Shop by category */
+.cat-section{padding-top:46px!important;padding-bottom:10px!important}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.cat-tile{display:flex;flex-direction:column;background:#fff;border:1px solid #e6ebe1;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+.cat-tile:hover{transform:translateY(-3px);box-shadow:0 12px 28px #1c3a2a18}
+.cat-tile img{width:100%;height:170px;object-fit:contain;background:#fff;padding:14px}
+.cat-tile.cat-photo img{object-fit:cover;padding:0}
+.cat-tile span{display:flex;flex-direction:column;gap:3px;padding:14px 16px 16px;border-top:1px solid #eef1ea}
+.cat-tile strong{font-size:17px;color:#173e2b}
+.cat-tile small{font-size:13px;color:#5d6b60;line-height:1.45}
+@media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr);gap:12px}.cat-tile img{height:120px}}
+/* Trust strip */
+.trust-section{padding:34px 0!important;background:#f4f7ef}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.trust-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:18px 12px;background:#fff;border:1px solid #e3eadb;border-radius:12px}
+.trust-ic{font-size:26px;line-height:1;margin-bottom:6px}
+.trust-item strong{font-size:16px;color:#173e2b}
+.trust-item small{font-size:13px;color:#5d6b60}
+@media(max-width:900px){.trust-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+@media(max-width:480px){.card-buttons{grid-template-columns:1fr}.product .card-buttons .btn{padding:9px 4px!important}}

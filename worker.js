@@ -1,6 +1,7 @@
 // BK Agro Worker
 // - Serves the website files
-// - POST /api/order: emails every order to BK Agro through Cloudflare Email Routing
+// - POST /api/order: emails every order to BK Agro through Cloudflare Email Routing,
+//   and adds it as a row in the BK Agro Orders Google Sheet (SHEET_URL + SHEET_TOKEN secrets)
 //   (no outside service, no API key, no activation emails)
 // Product names and prices are read live from assets/products.js, so the email
 // always matches the website after you change a price.
@@ -35,8 +36,10 @@ async function handleOrder(request, env) {
   let data;
   try { data = await request.json(); } catch { return json({ success: false, error: "Invalid order form." }, 400); }
   const c = data?.customer || {}, items = data?.items;
+  if (c.areaCustom && (!c.area || /^Other/.test(c.area))) c.area = c.areaCustom;
+  for (const k of ["area", "city", "division", "postcode", "landmark", "deliveryDate", "email", "special"]) if (typeof c[k] !== "string") c[k] = "";
 
-  for (const k of ["name", "mobile", "address", "area", "city"]) {
+  for (const k of ["name", "mobile", "address"]) {
     if (typeof c[k] !== "string" || !c[k].trim() || c[k].length > 400) return json({ success: false, error: "Please fill in all required fields." }, 400);
   }
   if (!/^01\d{9}$/.test(c.mobile)) return json({ success: false, error: "Please enter a valid 11-digit mobile number." }, 400);
@@ -47,11 +50,13 @@ async function handleOrder(request, env) {
   catch (e) { console.error("Catalog load failed", e && e.message); return json({ success: false, error: `We could not read the product list. Please order on WhatsApp: ${WA}.` }, 500); }
 
   let total = 0, rows = "";
+  const itemLines = [];
   for (const it of items) {
     const p = catalog[it.id], q = Number(it.quantity);
     if (!p || p.coming || !Number.isFinite(q) || q <= 0 || q > 200) return json({ success: false, error: "An item in your cart is no longer available. Please refresh the page and try again." }, 400);
     const price = Number(p.price) || 0, line = price * q;
     total += line;
+    itemLines.push(`${p.name} — ${p.unit === "box" ? `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}` : `${q} ${p.unit || ""}`.trim()}${price ? " — " + taka(line) : ""}`);
     const qty = p.unit === "box" ? `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}` : `${q} ${p.unit || ""}`.trim();
     rows += `<tr><td style="padding:8px;border-bottom:1px solid #eee">${esc(p.name)}${p.bangla ? `<br><span style="color:#666">${esc(p.bangla)}</span>` : ""}</td>` +
       `<td style="padding:8px;border-bottom:1px solid #eee">${esc(qty)}</td>` +
@@ -87,10 +92,32 @@ ${cell("House / Flat / Road", c.address)}${cell("Area / Upazila", c.area)}${cell
     "MIME-Version: 1.0", "Content-Type: text/html; charset=UTF-8", "Content-Transfer-Encoding: base64", "", b64(html)
   ].filter(l => l !== null).join("\r\n");
 
-  try {
-    await env.ORDER_EMAIL.send(new EmailMessage(from, to, raw));
-  } catch (err) {
-    console.error("Order email failed:", err && err.message);
+  // 1) Email to BK Agro   2) Row in the Google Sheet. The order counts as received if either works.
+  const emailJob = env.ORDER_EMAIL.send(new EmailMessage(from, to, raw))
+    .then(() => true, err => { console.error("Order email failed:", err && err.message); return false; });
+
+  const sheetJob = (env.SHEET_URL && env.SHEET_TOKEN)
+    ? fetch(env.SHEET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        redirect: "follow",
+        body: JSON.stringify({
+          token: env.SHEET_TOKEN, orderId,
+          name: c.name, mobile: c.mobile, email: c.email || "",
+          address: c.address, area: c.area || "", district: c.city || "", division: c.division || "",
+          postcode: c.postcode || "", landmark: c.landmark || "", deliveryDay: c.deliveryDate || "",
+          items: itemLines.join("\n"), total,
+          notes: [c.special, spam].filter(Boolean).join(" | ")
+        })
+      }).then(async r => {
+        const body = await r.json().catch(() => ({}));
+        if (!body.ok) console.error("Order sheet failed:", r.status, body.error || "");
+        return !!body.ok;
+      }, err => { console.error("Order sheet failed:", err && err.message); return false; })
+    : Promise.resolve(false);
+
+  const [emailOk, sheetOk] = await Promise.all([emailJob, sheetJob]);
+  if (!emailOk && !sheetOk) {
     return json({ success: false, error: `We could not send your order right now. Please order on WhatsApp: ${WA}.` }, 502);
   }
   return json({ success: true, orderId });
