@@ -455,3 +455,52 @@ body{background:#fdfcf9;color:#243c30}
 .product:hover h3 a,.product h3 a:hover,.product h3 a:focus-visible{color:#4c7a1e!important;text-decoration:underline!important;text-decoration-color:#83a943!important;text-decoration-thickness:2px!important;text-underline-offset:5px!important}
 #live .split>img{object-position:center 40%!important}
 #live .split>img{object-position:center 78%!important}
+/* Round 3: inquiry-only products (Buffalo Meat) */
+.inquiry-note{font-size:14px;color:#6b5a1e;background:#fbf6e7;border:1px solid #efe2b8;border-radius:8px;padding:8px 10px;margin:10px 0 12px}
+.inquiry-buttons{grid-template-columns:1fr!important}
+.inquiry-btn{background:#8a6d1f!important;border-color:#8a6d1f!important;color:#fff!important;width:100%}
+.inquiry-btn:hover{background:#6f5715!important}
+.detail-inquiry{display:block!important}
+.detail-inquiry .inquiry-btn{width:auto;min-width:220px}
+.inq-overlay{position:fixed;inset:0;z-index:300;background:rgba(10,20,12,.6);display:none;align-items:center;justify-content:center;padding:18px}
+.inq-overlay.open{display:flex}
+.inq-dialog{position:relative;background:#fff;border-radius:14px;max-width:480px;width:100%;max-height:92vh;overflow:auto;padding:28px 26px;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.inq-dialog h2{margin:6px 0 4px;font-size:26px}
+.inq-sub{color:#5d6858;font-size:15px;margin:0 0 16px}
+.inq-close{position:absolute;top:10px;right:12px;border:0;background:none;font-size:30px;line-height:1;color:#555;min-height:0!important;min-width:0!important}
+.inq-form{display:grid;gap:12px}
+.inq-form label{display:grid;gap:5px;font-weight:600;font-size:14px;color:#18341e}
+.inq-form .optional{font-weight:400;color:#7a8475}
+.inq-form input,.inq-form textarea{font:inherit;font-weight:400;padding:11px 12px;border:1px solid #d6dccf;border-radius:8px;width:100%;box-sizing:border-box}
+.inq-form input:focus,.inq-form textarea:focus{outline:2px solid #83a943;border-color:#83a943}
+.inq-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
+.inq-actions{display:flex;gap:10px;flex-wrap:wrap}
+.inq-actions .btn{flex:1 1 160px;text-align:center;justify-content:center}
+.inq-status{margin:0;font-size:14px;min-height:1em}
+.inq-status.err{color:#a3261b}
+.inq-done{text-align:center;padding:10px 0}
+.inq-tick{width:56px;height:56px;border-radius:50%;background:#667b2e;color:#fff;font-size:30px;display:grid;place-items:center;margin:0 auto 10px}
+/* Round 3: groceries coming soon */
+.coming-soon-panel{grid-column:1/-1;text-align:center;background:#fff;border:1px dashed #c9d3bd;border-radius:14px;padding:56px 20px}
+.coming-soon-panel .cs-badge{display:inline-block;background:#eaf3df;color:#38591b;font-weight:700;letter-spacing:2px;font-size:13px;padding:6px 14px;border-radius:20px}
+.coming-soon-panel h3{font-size:30px;margin:14px 0 8px}
+.coming-soon-panel p{color:#5d6858;margin:0}
+#live{scroll-margin-top:90px}
+/* Round 3 SEO: one h1 per page; other hero slide titles are h2 styled the same */
+.hero .slidecopy h2.slide-title{font-family:'Nexa','Kalpurush',Arial,sans-serif!important;font-size:clamp(36px,5vw,67px)!important;font-weight:800!important;line-height:1.1!important;letter-spacing:-.035em!important;text-shadow:0 2px 18px rgba(0,0,0,.12);margin:0 0 14px!important;color:inherit}
+@media(max-width:760px){.hero .slidecopy h2.slide-title{font-size:clamp(29px,8vw,43px)!important;line-height:1.15!important}}
+.product.bk-clean-card .card-buttons .btn.inquiry-btn,.premium-detail .btn.inquiry-btn{background:#8a6d1f!important;border-color:#8a6d1f!important;color:#fff!important}
+.product.bk-clean-card .card-buttons .btn.inquiry-btn:hover{background:#6f5715!important}
+.product.bk-clean-card .inquiry-note{display:block!important;font-size:13px;margin:8px 0 12px}
+.inq-form label{display:block!important}
+.inq-form label input,.inq-form label textarea{display:block;margin-top:5px}
+.inq-form[hidden]{display:none!important}
+/* Round 3b: clear Bangla badges on product pages (bigger, real weight, no fake bold) */
+.no-feed-badge{font-family:'Kalpurush',serif!important;font-size:17px!important;font-weight:400!important;font-synthesis:none;color:#1d3f12!important;background:#eaf5de!important;border:1px solid #9fc574!important;padding:11px 14px!important;line-height:1.5!important;display:flex!important;align-items:center;gap:10px;letter-spacing:.2px}
+.no-feed-badge{position:relative;padding-left:44px!important}
+.no-feed-badge::before{content:'✓';position:absolute;left:13px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:#4c7a1e;color:#fff;font:700 13px/22px Arial,sans-serif;text-align:center}
+.detail-shipping{font-family:'Kalpurush',serif!important;font-size:17px!important;font-weight:400!important;font-synthesis:none;color:#24451f!important;line-height:1.5}
+.detail-lead{color:#3f4b43!important;font-size:17px!important}
+.detail-mini{font-size:15px!important;color:#3b4d3e!important;gap:18px!important}
+.detail-mini span{font-family:'Kalpurush',serif;font-weight:400;font-synthesis:none}
+.inquiry-note{font-size:15px!important;font-weight:400!important;font-synthesis:none;color:#5b4a12!important}

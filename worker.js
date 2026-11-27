@@ -53,7 +53,7 @@ async function handleOrder(request, env) {
   const itemLines = [];
   for (const it of items) {
     const p = catalog[it.id], q = Number(it.quantity);
-    if (!p || p.coming || !Number.isFinite(q) || q <= 0 || q > 200) return json({ success: false, error: "An item in your cart is no longer available. Please refresh the page and try again." }, 400);
+    if (!p || p.coming || p.inquiry || !Number.isFinite(q) || q <= 0 || q > 200) return json({ success: false, error: "An item in your cart is no longer available. Please refresh the page and try again." }, 400);
     const price = Number(p.price) || 0, line = price * q;
     total += line;
     itemLines.push(`${p.name} — ${p.unit === "box" ? `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}` : `${q} ${p.unit || ""}`.trim()}${price ? " — " + taka(line) : ""}`);
@@ -123,10 +123,52 @@ ${cell("House / Flat / Road", c.address)}${cell("Area / Upazila", c.area)}${cell
   return json({ success: true, orderId });
 }
 
+// POST /api/inquiry: availability questions for inquiry-only products (e.g. Buffalo Meat).
+// Email only; it does not touch orders or the Google Sheet.
+async function handleInquiry(request, env) {
+  if (request.method !== "POST") return json({ success: false, error: "Please use the inquiry form." }, 405);
+  if (!env.ORDER_EMAIL || !env.ORDER_TO) return json({ success: false, error: `Please message us on WhatsApp: ${WA}.` }, 503);
+  let d;
+  try { d = await request.json(); } catch { return json({ success: false, error: "Invalid inquiry form." }, 400); }
+  for (const k of ["product", "name", "mobile", "quantity", "message", "email", "website"]) if (typeof d?.[k] !== "string") d[k] = "";
+  if (!d.name.trim() || d.name.length > 200) return json({ success: false, error: "Please enter your name." }, 400);
+  if (!/^01\d{9}$/.test(d.mobile)) return json({ success: false, error: "Please enter a valid 11-digit mobile number." }, 400);
+  if (d.quantity.length > 100 || d.message.length > 1500 || d.email.length > 200) return json({ success: false, error: "Your message is too long." }, 400);
+
+  let p = null;
+  try { p = (await loadCatalog(request, env))[d.product] || null; } catch (e) { console.error("Catalog load failed", e && e.message); }
+  const productName = p ? `${p.name}${p.bangla ? " (" + p.bangla + ")" : ""}` : (d.product || "Product");
+
+  const now = new Date();
+  const stamp = new Date(now.getTime() + 6 * 3600 * 1000).toISOString().slice(0, 16).replace("T", " ");
+  const inquiryId = "BKQ-" + stamp.slice(0, 10).replaceAll("-", "") + "-" + crypto.randomUUID().slice(0, 6).toUpperCase();
+  const cell = (k, v) => `<tr><th style="text-align:left;padding:8px;background:#f5f7f1;width:34%">${esc(k)}</th><td style="padding:8px">${esc(v || "—")}</td></tr>`;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:700px;margin:auto;color:#173e2b">
+<h2 style="background:#8a6d1f;color:#fff;padding:18px;margin:0">BK Agro · Product Inquiry</h2>
+<p><b>Inquiry:</b> ${inquiryId}<br><b>Received:</b> ${stamp} (Dhaka time)</p>
+<table style="border-collapse:collapse;width:100%">
+${cell("Product", productName)}${p && p.price ? cell("Listed price", taka(p.price) + " / " + (p.unit || "kg")) : ""}${cell("Name", d.name)}${cell("Mobile", d.mobile)}${cell("Email", d.email)}${cell("Quantity wanted", d.quantity)}${cell("Message", d.message)}${d.website ? cell("Note", "Hidden anti-spam field was filled (can be browser autofill).") : ""}</table>
+<p>This is an inquiry, not an order. Please reply to confirm availability.</p>
+<p><a href="tel:${esc(d.mobile)}">📞 Call customer</a> &nbsp;·&nbsp; <a href="https://wa.me/88${esc(d.mobile)}">💬 WhatsApp customer</a></p></div>`;
+  const from = env.ORDER_FROM || "orders@bkagrobd.com", to = env.ORDER_TO;
+  const subject = `Inquiry ${inquiryId} — ${oneLine(p ? p.name : d.product)} — ${oneLine(d.name)}`;
+  const replyTo = d.email && /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(d.email) ? `Reply-To: <${oneLine(d.email)}>` : null;
+  const raw = [
+    `From: BK Agro Orders <${from}>`, `To: <${to}>`, replyTo,
+    `Subject: =?UTF-8?B?${b64(subject).replace(/\r\n/g, "")}?=`,
+    `Date: ${now.toUTCString()}`, `Message-ID: <${crypto.randomUUID()}@bkagrobd.com>`,
+    "MIME-Version: 1.0", "Content-Type: text/html; charset=UTF-8", "Content-Transfer-Encoding: base64", "", b64(html)
+  ].filter(l => l !== null).join("\r\n");
+  try { await env.ORDER_EMAIL.send(new EmailMessage(from, to, raw)); }
+  catch (err) { console.error("Inquiry email failed:", err && err.message); return json({ success: false, error: `We could not send your inquiry. Please message us on WhatsApp: ${WA}.` }, 502); }
+  return json({ success: true, inquiryId });
+}
+
 export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname;
     if (path === "/api/order" || path === "/api/order/") return handleOrder(request, env);
+    if (path === "/api/inquiry" || path === "/api/inquiry/") return handleInquiry(request, env);
     return env.ASSETS.fetch(request);
   }
 };

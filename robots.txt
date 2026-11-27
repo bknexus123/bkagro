@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.bkagrobd.com/sitemap.xml
+Disallow: /cart.html
+Disallow: /checkout.html
+Disallow: /api/
+
+Sitemap: https://bkagrobd.com/sitemap.xml
