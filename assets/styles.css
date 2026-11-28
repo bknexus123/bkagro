@@ -504,3 +504,35 @@ body{background:#fdfcf9;color:#243c30}
 .detail-mini{font-size:15px!important;color:#3b4d3e!important;gap:18px!important}
 .detail-mini span{font-family:'Kalpurush',serif;font-weight:400;font-synthesis:none}
 .inquiry-note{font-size:15px!important;font-weight:400!important;font-synthesis:none;color:#5b4a12!important}
+/* Round 4: pre-order eggs + 500 g weights */
+.preorder-badge{display:inline-block;align-self:flex-start;background:#fbf1d6;color:#7a5a0e;border:1px solid #e9cf8c;border-radius:20px;font:700 12px/1 Arial,sans-serif;letter-spacing:.4px;padding:6px 11px;margin:6px 0 4px}
+.premium-detail .preorder-badge,.detail-copy .preorder-badge{font-size:13px;margin:6px 0 2px}
+.product.bk-clean-card .card-buttons .btn.preorder-btn,.detail-buy .btn.preorder-btn{background:#8a6d1f!important;border-color:#8a6d1f!important;color:#fff!important}
+.product.bk-clean-card .card-buttons .btn.preorder-btn:hover,.detail-buy .btn.preorder-btn:hover{background:#6f5715!important}
+.preorder-box{background:#fbf6e7;border:1px solid #ead9a6;border-left:4px solid #c9a24a;border-radius:10px;padding:14px 16px;margin:14px 0}
+.preorder-box strong{display:block;color:#6b4f0c;font-size:16px;margin-bottom:6px}
+.preorder-box p{margin:0;font-family:'Kalpurush',serif;font-size:17px;line-height:1.75;color:#4a3d16;font-synthesis:none}
+.preorder-notice{background:#fbf6e7;border:1px solid #ead9a6;border-left:4px solid #c9a24a;border-radius:10px;padding:14px 16px;margin:0 0 18px}
+.preorder-notice[hidden]{display:none!important}
+.preorder-notice strong{color:#6b4f0c;font-size:16px}
+.preorder-notice p{margin:6px 0 0;font-family:'Kalpurush',serif;font-size:17px;line-height:1.7;color:#4a3d16;font-synthesis:none}
+.preorder-tag{display:inline-block;background:#fbf1d6;color:#7a5a0e;border:1px solid #e9cf8c;border-radius:12px;font:700 11px/1 Arial,sans-serif;padding:4px 8px;vertical-align:middle;margin-left:4px}
+.detail-total{font-weight:700;color:#18341e;font-size:18px;margin:12px 0 4px}
+.weight-note{font-family:'Kalpurush',serif;font-size:16px;line-height:1.7;color:#3f4b43;background:#f4f7ef;border-radius:8px;padding:10px 13px;margin:6px 0 0;font-synthesis:none}
+#detailQty[readonly]{width:96px;text-align:center;font-weight:700;background:#fff}
+.preorder-wrap[hidden]{display:none!important}.preorder-wrap .preorder-notice{max-width:none;margin:0 0 22px!important}
+
+/* Round 5: tidy price line, stepper inside its box, detail weight row */
+.product .price{flex-wrap:nowrap!important;white-space:nowrap;gap:5px!important}
+.product .price-unit{font-size:14px!important;font-weight:700}
+.product .quantity{display:inline-flex!important;width:auto!important;align-self:flex-start;justify-content:flex-start!important;gap:0!important;overflow:hidden}
+.product .quantity button{flex:0 0 38px;min-width:38px!important;padding:0!important}
+.product .quantity span{flex:0 0 auto;min-width:54px;padding:0 4px;text-align:center;white-space:nowrap;font-weight:600;font-size:15px}
+@media(max-width:480px){.product .price-amount{font-size:22px!important}.product .price-unit{font-size:12px!important}.product .quantity button{flex-basis:32px;min-width:32px!important}.product .quantity span{min-width:48px;font-size:14px}}
+.detail-qty-row{margin:4px 0 18px}
+.detail-qty-row label{display:block;font-weight:700;color:#18341e;margin-bottom:8px}
+.detail-qty-line{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.detail-qty-line .detail-stepper{display:inline-flex!important;width:auto}
+.detail-qty-line .detail-total{margin:0;font-size:18px;font-weight:700;color:#18341e}
+.qty-hint{display:block;margin-top:6px;color:#5d6858;font-family:'Kalpurush',serif;font-size:14px}
+.detail-buy{display:flex;flex-wrap:wrap;gap:10px;align-items:center}

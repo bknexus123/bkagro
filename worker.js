@@ -29,6 +29,13 @@ async function loadCatalog(request, env) {
   return Object.fromEntries(list.map(p => [p.id, p]));
 }
 
+// Quantity text: boxes for eggs, weight for items sold in 500 g steps, otherwise "q unit".
+function qtyText(p, q) {
+  if (p.unit === "box") return `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}`;
+  if (p.grams) { const g = p.grams * q; return g >= 1000 ? `${+(g / 1000).toFixed(2)} kg` : `${g} g`; }
+  return `${q} ${p.unit || ""}`.trim();
+}
+
 async function handleOrder(request, env) {
   if (request.method !== "POST") return json({ success: false, error: "Please use the checkout form." }, 405);
   if (!env.ORDER_EMAIL || !env.ORDER_TO) return json({ success: false, error: `Online ordering is not ready yet. Please order on WhatsApp: ${WA}.` }, 503);
@@ -51,14 +58,16 @@ async function handleOrder(request, env) {
 
   let total = 0, rows = "";
   const itemLines = [];
+  let hasPreorder = false;
   for (const it of items) {
     const p = catalog[it.id], q = Number(it.quantity);
     if (!p || p.coming || p.inquiry || !Number.isFinite(q) || q <= 0 || q > 200) return json({ success: false, error: "An item in your cart is no longer available. Please refresh the page and try again." }, 400);
     const price = Number(p.price) || 0, line = price * q;
     total += line;
-    itemLines.push(`${p.name} — ${p.unit === "box" ? `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}` : `${q} ${p.unit || ""}`.trim()}${price ? " — " + taka(line) : ""}`);
-    const qty = p.unit === "box" ? `${q} box${q > 1 ? "es" : ""}${p.eggs ? ` (${p.eggs * q} eggs)` : ""}` : `${q} ${p.unit || ""}`.trim();
-    rows += `<tr><td style="padding:8px;border-bottom:1px solid #eee">${esc(p.name)}${p.bangla ? `<br><span style="color:#666">${esc(p.bangla)}</span>` : ""}</td>` +
+    const qty = qtyText(p, q);
+    if (p.preorder) hasPreorder = true;
+    itemLines.push(`${p.preorder ? "[PRE-ORDER] " : ""}${p.name} — ${qty}${price ? " — " + taka(line) : ""}`);
+    rows += `<tr><td style="padding:8px;border-bottom:1px solid #eee">${p.preorder ? `<b style="color:#8a6d1f">[PRE-ORDER]</b> ` : ""}${esc(p.name)}${p.bangla ? `<br><span style="color:#666">${esc(p.bangla)}</span>` : ""}</td>` +
       `<td style="padding:8px;border-bottom:1px solid #eee">${esc(qty)}</td>` +
       `<td style="padding:8px;border-bottom:1px solid #eee">${price ? taka(price) + " / " + esc(p.unit) : "—"}</td>` +
       `<td style="padding:8px;border-bottom:1px solid #eee">${price ? taka(line) : "—"}</td></tr>`;
@@ -73,6 +82,7 @@ async function handleOrder(request, env) {
   const html = `<div style="font-family:Arial,sans-serif;max-width:700px;margin:auto;color:#173e2b">
 <h2 style="background:#173e2b;color:#fff;padding:18px;margin:0">BK Agro · New Order</h2>
 <p><b>Order:</b> ${orderId}<br><b>Received:</b> ${stamp} (Dhaka time)</p>
+${hasPreorder ? `<p style="background:#fbf6e7;border:1px solid #efe2b8;padding:10px 12px;color:#6b5a1e"><b>PRE-ORDER:</b> This order includes pre-order eggs. Confirm availability with the customer and agree a delivery date and time.</p>` : ""}
 <h3>Customer</h3><table style="border-collapse:collapse;width:100%">
 ${cell("Name", c.name)}${cell("Mobile", c.mobile)}${cell("Email", c.email)}</table>
 <h3>Delivery</h3><table style="border-collapse:collapse;width:100%">
@@ -83,7 +93,7 @@ ${cell("House / Flat / Road", c.address)}${cell("Area / Upazila", c.area)}${cell
 <p><a href="tel:${esc(c.mobile)}">📞 Call customer</a> &nbsp;·&nbsp; <a href="https://wa.me/88${esc(c.mobile)}">💬 WhatsApp customer</a></p></div>`;
 
   const from = env.ORDER_FROM || "orders@bkagrobd.com", to = env.ORDER_TO;
-  const subject = `New Order ${orderId} — ${oneLine(c.name)} — ${taka(total)}`;
+  const subject = `${hasPreorder ? "PRE-ORDER · " : ""}New Order ${orderId} — ${oneLine(c.name)} — ${taka(total)}`;
   const replyTo = c.email && /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(c.email) ? `Reply-To: <${oneLine(c.email)}>` : null;
   const raw = [
     `From: BK Agro Orders <${from}>`, `To: <${to}>`, replyTo,
